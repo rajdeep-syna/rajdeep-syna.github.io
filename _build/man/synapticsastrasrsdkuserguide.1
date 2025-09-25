@@ -1,0 +1,760 @@
+'\" t
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "SYNAPTICSASTRASRSDKUSERGUIDE" "1" "Sep 25, 2025" "" "Synaptics Astra SR SDK User Guide"
+.SH NAME
+synapticsastrasrsdkuserguide \- Synaptics Astra SR SDK User Guide SRSDK 1.0.1
+.sp
+Add your content using \fBreStructuredText\fP syntax. See the
+\X'tty: link https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html'\fI\%reStructuredText\fP\X'tty: link'
+documentation for details.
+.SH INSTALLATION
+.sp
+Demo installation page
+.SS How proceed further
+.sp
+Use pip to install for demo usecase
+.SS Steps for installation
+.sp
+pip install crawler
+.SH TITLE
+.sp
+Support
+.SS Section
+.sp
+The easiest way to get help with the project is to join the #crawler
+channel on Freenode.
+We hang out there and you can get real\-time help with your projects.
+The other good way is to open an issue on Github.
+.sp
+The mailing list at \X'tty: link https://groups.google.com/forum/#!forum/crawler'\fI\%https://groups.google.com/forum/#!forum/crawler\fP\X'tty: link'
+is also available for support.
+.SS Subsection
+.sp
+Freenode: \fI\%irc://freenode.net\fP
+Github: \X'tty: link http://github.com/example/crawler/issues'\fI\%http://github.com/example/crawler/issues\fP\X'tty: link'
+.SH OPENOCD DEBUG GUIDE FOR XSPI FLASH DRIVER
+.sp
+This guide provides step\-by\-step instructions for debugging the xSPI flash driver using OpenOCD and GDB.
+.SS Table of Contents
+.INDENT 0.0
+.IP \(bu 2
+\fI\%Prerequisites\fP
+.IP \(bu 2
+\fI\%Hardware Setup\fP
+.IP \(bu 2
+\fI\%OpenOCD Configuration\fP
+.IP \(bu 2
+\fI\%Debugging Session\fP
+.IP \(bu 2
+\fI\%Common Debug Scenarios\fP
+.IP \(bu 2
+\fI\%Troubleshooting\fP
+.UNINDENT
+.SS Prerequisites
+.SS Software Requirements
+.INDENT 0.0
+.IP \(bu 2
+OpenOCD 0.12.0 or later
+.IP \(bu 2
+ARM GDB (arm\-none\-eabi\-gdb)
+.IP \(bu 2
+J\-Link drivers (if using J\-Link debugger)
+.IP \(bu 2
+SDK build environment
+.UNINDENT
+.SS Hardware Requirements
+.INDENT 0.0
+.IP \(bu 2
+Development board with xSPI controller
+.IP \(bu 2
+J\-Link or compatible JTAG/SWD debugger
+.IP \(bu 2
+USB cables for power and debug connection
+.IP \(bu 2
+xSPI flash memory device (Winbond, Macronix, GigaDevice, etc.)
+.UNINDENT
+.sp
+[image: Hardware Setup]
+[image]
+
+.SS Hardware Setup
+.SS 1. Board Connections
+.sp
+Connect your hardware as shown in the diagram:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+[PC] ←USB→ [J\-Link] ←SWD→ [Dev Board] ←xSPI→ [Flash Memory]
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 2. Power Configuration
+.sp
+Ensure proper power supply to the development board:
+.INDENT 0.0
+.IP \(bu 2
+Connect USB power or external power supply
+.IP \(bu 2
+Verify 3.3V rail is stable
+.IP \(bu 2
+Check that flash memory is properly powered
+.UNINDENT
+.sp
+[image: Power Connections]
+[image]
+
+.SS 3. SWD/JTAG Connection
+.sp
+Connect the debugger to the development board SWD interface:
+.TS
+box center;
+l|l|l.
+T{
+J\-Link Pin
+T}	T{
+Board Pin
+T}	T{
+Signal
+T}
+_
+T{
+1
+T}	T{
+VCC
+T}	T{
+3.3V
+T}
+_
+T{
+7
+T}	T{
+SWDIO
+T}	T{
+SWDIO
+T}
+_
+T{
+9
+T}	T{
+SWCLK
+T}	T{
+SWCLK
+T}
+_
+T{
+15
+T}	T{
+nRESET
+T}	T{
+RESET
+T}
+_
+T{
+4,6,8,10,12,14,16,18,20
+T}	T{
+GND
+T}	T{
+Ground
+T}
+.TE
+.SS OpenOCD Configuration
+.SS 1. Create OpenOCD Configuration File
+.sp
+Create \fBxspi_debug.cfg\fP in your project directory:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# xSPI Debug Configuration
+source [find interface/jlink.cfg]
+
+# Set adapter speed
+adapter speed 4000
+
+# Target configuration
+source [find target/cortex_m.cfg]
+
+# Target specific settings
+set CHIPNAME target
+set CPUTAPID 0x6ba02477
+
+# CM55 Core configuration
+target create $_CHIPNAME.cm55 cortex_m \-endian little \-chain\-position $_CHIPNAME.cpu
+
+# Flash configuration for xSPI
+flash bank xspi_flash external 0x60000000 0x1000000 1 1 $_CHIPNAME.cm55
+
+# Reset configuration
+reset_config srst_only srst_nogate
+
+# Initialize
+init
+
+# Enable semihosting
+arm semihosting enable
+
+# Halt after reset
+reset halt
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 2. Launch OpenOCD
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+openocd \-f xspi_debug.cfg
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+Expected output:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+Open On\-Chip Debugger 0.12.0
+Licensed under GNU GPL v2
+Info : J\-Link initialization started / target CPU reset initiated
+Info : J\-Link V11 compiled Feb  2 2021 16:47:23
+Info : Hardware version: 11.00
+Info : VTarget = 3.300V
+Info : clock speed 4000 kHz
+Info : SWD DPIDR 0x6ba02477
+Info : target.cm55: hardware has 8 breakpoints, 4 watchpoints
+Info : starting gdb server for target.cm55 on 3333
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+[image: OpenOCD Console]
+[image]
+
+.SS Debugging Session
+.SS 1. Connect GDB
+.sp
+In a separate terminal, launch GDB:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+arm\-none\-eabi\-gdb build/sr100_cm55_fw.elf
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+Connect to OpenOCD:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+(gdb) target extended\-remote localhost:3333
+(gdb) monitor reset halt
+(gdb) load
+(gdb) monitor reset halt
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 2. Set Breakpoints
+.sp
+Set breakpoints in xSPI driver functions:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# Break at driver initialization
+(gdb) break xspi_nor_initialize
+
+# Break at read/write operations
+(gdb) break xspi_nor_read
+(gdb) break xspi_nor_write
+
+# Break at SFDP detection
+(gdb) break xspi_configure_from_sfdp
+
+# Break at quad mode enable
+(gdb) break xspi_enable_quad_mode
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 3. Start Debugging
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+(gdb) continue
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+[image: GDB Session]
+[image]
+
+.SS Common Debug Scenarios
+.SS 1. Flash Detection Issues
+.sp
+If flash is not detected properly:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# Check JEDEC ID reading
+(gdb) break xspi_read_jedec_id
+(gdb) continue
+(gdb) print/x jedec_id[0]
+(gdb) print/x jedec_id[1] 
+(gdb) print/x jedec_id[2]
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 2. SFDP Parameter Issues
+.sp
+Debug SFDP parameter reading:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# Break at SFDP header reading
+(gdb) break jesd216_sfdp_read
+(gdb) continue
+
+# Examine SFDP data
+(gdb) x/16xw sfdp_header
+(gdb) x/64xw bfp_table
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 3. Quad Mode Enable Problems
+.sp
+Debug quad mode configuration:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# Check QER detection
+(gdb) break xspi_read_qer_from_sfdp
+(gdb) continue
+(gdb) print qer_type
+
+# Check status register operations
+(gdb) break xspi_read_status
+(gdb) continue
+(gdb) print/x status_value
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 4. xSPI Controller Register Inspection
+.sp
+Examine xSPI controller registers during operation:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# Check controller configuration
+(gdb) x/x 0x40000000  # XSPI_CTRL_BASE_ADDRESS
+(gdb) x/x 0x40000004  # Control config register
+(gdb) x/x 0x40000008  # Status register
+
+# Check LUT entries
+(gdb) x/16xw 0x40000200  # LUT table base
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+[image: Register Inspection]
+[image]
+
+.SS 5. Memory Operations Debug
+.sp
+Debug read/write operations:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# Set watchpoint on data buffer
+(gdb) watch *((char*)data_buffer)
+
+# Check XIP memory space
+(gdb) x/64xw 0x60000000  # XIP base address
+
+# Monitor flash operations
+(gdb) break xspi_nor_write_page_stig
+(gdb) continue
+(gdb) print/x address
+(gdb) print length
+(gdb) x/16xb data
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS Troubleshooting
+.SS Common Issues and Solutions
+.SS 1. Connection Problems
+.sp
+\fBIssue\fP: OpenOCD cannot connect to target
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+Error: SWD DPIDR 0x00000000
+Error: Could not initialize the debug port
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+\fBSolution\fP:
+.INDENT 0.0
+.IP \(bu 2
+Check SWD connections
+.IP \(bu 2
+Verify target power
+.IP \(bu 2
+Reduce adapter speed: \fBadapter speed 1000\fP
+.IP \(bu 2
+Try different reset configuration
+.UNINDENT
+.SS 2. Flash Access Errors
+.sp
+\fBIssue\fP: Cannot read/write flash memory
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+Error: Failed to read flash status
+Error: Flash operation timeout
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+\fBSolution\fP:
+.INDENT 0.0
+.IP \(bu 2
+Verify flash power supply
+.IP \(bu 2
+Check xSPI controller initialization
+.IP \(bu 2
+Ensure correct flash device configuration
+.IP \(bu 2
+Verify LUT table programming
+.UNINDENT
+.SS 3. SFDP Reading Failures
+.sp
+\fBIssue\fP: SFDP parameters cannot be read
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+SFDP header read failed
+Invalid SFDP signature
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+\fBSolution\fP:
+.INDENT 0.0
+.IP \(bu 2
+Check flash device compatibility
+.IP \(bu 2
+Verify SFDP read command (0x5A)
+.IP \(bu 2
+Ensure proper dummy cycles
+.IP \(bu 2
+Try different read modes (1\-1\-1 first)
+.UNINDENT
+.SS 4. Quad Mode Issues
+.sp
+\fBIssue\fP: Quad mode enable fails
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+QE bit not set after write
+Quad read operations fail
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+\fBSolution\fP:
+.INDENT 0.0
+.IP \(bu 2
+Verify QER type detection
+.IP \(bu 2
+Check manufacturer\-specific QE procedures
+.IP \(bu 2
+Ensure proper write enable sequence
+.IP \(bu 2
+Verify status register write operations
+.UNINDENT
+.SS Debug Commands Reference
+.TS
+box center;
+l|l.
+T{
+GDB Command
+T}	T{
+Description
+T}
+_
+T{
+\fBinfo registers\fP
+T}	T{
+Show CPU registers
+T}
+_
+T{
+\fBbacktrace\fP
+T}	T{
+Show call stack
+T}
+_
+T{
+\fBprint variable\fP
+T}	T{
+Print variable value
+T}
+_
+T{
+\fBx/NUaddr\fP
+T}	T{
+Examine memory
+T}
+_
+T{
+\fBwatch expression\fP
+T}	T{
+Set watchpoint
+T}
+_
+T{
+\fBmonitor reset\fP
+T}	T{
+Reset target via OpenOCD
+T}
+_
+T{
+\fBmonitor halt\fP
+T}	T{
+Halt target execution
+T}
+.TE
+.SS OpenOCD Monitor Commands
+.TS
+box center;
+l|l.
+T{
+Command
+T}	T{
+Description
+T}
+_
+T{
+\fBmonitor reset halt\fP
+T}	T{
+Reset and halt target
+T}
+_
+T{
+\fBmonitor reg\fP
+T}	T{
+Show registers
+T}
+_
+T{
+\fBmonitor flash info 0\fP
+T}	T{
+Show flash bank info
+T}
+_
+T{
+\fBmonitor mdw address\fP
+T}	T{
+Read word from memory
+T}
+_
+T{
+\fBmonitor mww address value\fP
+T}	T{
+Write word to memory
+T}
+.TE
+.SS Advanced Debugging Techniques
+.SS 1. Logic Analyzer Integration
+.sp
+For complex timing issues, use a logic analyzer to capture SPI signals:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+Channels to monitor:
+\- CLK: xSPI clock
+\- CS#: Chip select
+\- IO0\-IO3: Data lines (quad mode)
+\- IO4\-IO7: Additional data lines (octal mode)
+
+.EE
+.UNINDENT
+.UNINDENT
+.sp
+[image: Logic Analyzer Setup]
+[image]
+
+.SS 2. Performance Profiling
+.sp
+Profile flash operations:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# Time flash operations
+(gdb) set $start = $pc
+(gdb) continue
+(gdb) set $end = $pc
+(gdb) print $end \- $start
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS 3. Automated Test Scripts
+.sp
+Create GDB scripts for automated testing:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.EX
+# test_flash.gdb
+define test_flash_read
+    break xspi_nor_read
+    continue
+    print \(dqRead operation started\(dq
+    continue
+    print \(dqRead operation completed\(dq
+end
+
+define test_flash_write  
+    break xspi_nor_write
+    continue
+    print \(dqWrite operation started\(dq
+    continue
+    print \(dqWrite operation completed\(dq
+end
+
+.EE
+.UNINDENT
+.UNINDENT
+.SS Conclusion
+.sp
+This guide provides comprehensive debugging support for the Sabre xSPI flash driver. Use the appropriate debugging techniques based on your specific issue:
+.INDENT 0.0
+.IP \(bu 2
+\fBConnection issues\fP: Start with basic OpenOCD connection
+.IP \(bu 2
+\fBFlash detection\fP: Debug JEDEC ID and SFDP reading
+.IP \(bu 2
+\fBMode configuration\fP: Focus on quad/octal mode enable sequences
+.IP \(bu 2
+\fBData operations\fP: Monitor read/write operations and memory access
+.IP \(bu 2
+\fBPerformance issues\fP: Use profiling and logic analyzer capture
+.UNINDENT
+.sp
+For additional support, refer to the driver source code comments and the xSPI controller documentation.
+
+.sp
+.ce
+----
+
+.ce 0
+.sp
+.sp
+\fBNote\fP: Replace placeholder images in the \fB_static/assets/\fP directory with actual screenshots and diagrams from your debugging setup.
+.SH THE OV5647 DATASHEET
+.sp
+This document provides detailed technical information and instructions.
+.SS About This Document
+.sp
+This document contains comprehensive information and technical specifications. Click the link above to view the complete PDF content.
+.sp
+The PDF includes:
+.INDENT 0.0
+.IP \(bu 2
+Detailed procedures and instructions
+.IP \(bu 2
+Technical specifications
+.IP \(bu 2
+Code examples and references
+.IP \(bu 2
+Troubleshooting information
+.UNINDENT
+.sp
+For the best viewing experience, click “Open PDF” to view in a new tab, or use “Download PDF” to save locally.
+.SH RGB IR SENSOR
+.sp
+View the complete RGB IR Sensor directly below:
+.SS About This Document
+.sp
+This document provides detailed information and technical specifications. Use the buttons above to download or view the PDF in a new tab.
+.sp
+The PDF includes comprehensive documentation with:
+.INDENT 0.0
+.IP \(bu 2
+Detailed procedures and instructions
+.IP \(bu 2
+Technical specifications
+.IP \(bu 2
+Code examples and references
+.IP \(bu 2
+Troubleshooting information
+.UNINDENT
+.sp
+For the best viewing experience, click “Open in New Tab” to view in a dedicated browser tab, or use “Download PDF” to save locally.
+.SH AUTHOR
+Synaptics
+.SH COPYRIGHT
+2023 - 2025, Synaptics
+.\" Generated by docutils manpage writer.
+.
