@@ -1,0 +1,46 @@
+<svg width="500" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="500" height="300" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+  
+  <!-- Development Board -->
+  <rect x="150" y="80" width="200" height="140" fill="#28a745" rx="10"/>
+  <text x="250" y="105" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">Development Board</text>
+  
+  <!-- Power Input -->
+  <rect x="50" y="120" width="80" height="40" fill="#dc3545" rx="5"/>
+  <text x="90" y="135" text-anchor="middle" fill="white" font-family="Arial" font-size="10">USB Power</text>
+  <text x="90" y="150" text-anchor="middle" fill="white" font-family="Arial" font-size="10">5V/3.3V</text>
+  
+  <!-- 3.3V Rail -->
+  <rect x="180" y="130" width="60" height="20" fill="#ffc107" rx="3"/>
+  <text x="210" y="143" text-anchor="middle" fill="black" font-family="Arial" font-size="10">3.3V Rail</text>
+  
+  <!-- Flash Memory -->
+  <rect x="280" y="120" width="50" height="40" fill="#6f42c1" rx="5"/>
+  <text x="305" y="135" text-anchor="middle" fill="white" font-family="Arial" font-size="9">Flash</text>
+  <text x="305" y="148" text-anchor="middle" fill="white" font-family="Arial" font-size="9">Memory</text>
+  
+  <!-- External Power Option -->
+  <rect x="50" y="180" width="80" height="40" fill="#6c757d" rx="5"/>
+  <text x="90" y="195" text-anchor="middle" fill="white" font-family="Arial" font-size="10">External</text>
+  <text x="90" y="210" text-anchor="middle" fill="white" font-family="Arial" font-size="10">Power</text>
+  
+  <!-- Power Lines -->
+  <line x1="130" y1="140" x2="150" y2="140" stroke="#dc3545" stroke-width="3"/>
+  <line x1="130" y1="200" x2="150" y2="200" stroke="#6c757d" stroke-width="3"/>
+  <line x1="240" y1="140" x2="280" y2="140" stroke="#ffc107" stroke-width="3"/>
+  
+  <!-- Voltage Labels -->
+  <text x="140" y="135" text-anchor="middle" fill="#dc3545" font-family="Arial" font-size="9">5V</text>
+  <text x="140" y="195" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="9">3.3V</text>
+  <text x="260" y="135" text-anchor="middle" fill="#ffc107" font-family="Arial" font-size="9">3.3V</text>
+  
+  <!-- Ground -->
+  <rect x="180" y="180" width="140" height="15" fill="#343a40" rx="3"/>
+  <text x="250" y="192" text-anchor="middle" fill="white" font-family="Arial" font-size="10">Ground (GND)</text>
+  
+  <text x="250" y="30" text-anchor="middle" fill="#495057" font-family="Arial" font-size="16" font-weight="bold">Power Connection Diagram</text>
+  
+  <!-- Power indicators -->
+  <circle cx="370" cy="140" r="8" fill="#28a745"/>
+  <text x="385" y="145" fill="#28a745" font-family="Arial" font-size="10">Power OK</text>
+</svg>
