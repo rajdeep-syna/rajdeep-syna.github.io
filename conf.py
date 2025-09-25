@@ -52,7 +52,7 @@ html_theme_options = {
 
 html_context = {
   'display_github': True,
-  'github_repo': 'syna-astra-mcu-dev.github.io',
+  'github_repo': 'rajdeep-syna.github.io',
   'github_version': 'main',
   'conf_py_path': '/',
   'version': release
