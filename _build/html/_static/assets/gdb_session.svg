@@ -1,0 +1,42 @@
+<svg width="700" height="450" xmlns="http://www.w3.org/2000/svg">
+  <rect width="700" height="450" fill="#1e1e1e" stroke="#333" stroke-width="2"/>
+  
+  <!-- Terminal Header -->
+  <rect x="0" y="0" width="700" height="30" fill="#2d2d30"/>
+  <circle cx="15" cy="15" r="6" fill="#ff5f56"/>
+  <circle cx="35" cy="15" r="6" fill="#ffbd2e"/>
+  <circle cx="55" cy="15" r="6" fill="#27ca3f"/>
+  <text x="80" y="20" fill="#cccccc" font-family="monospace" font-size="12">GDB Debug Session</text>
+  
+  <!-- Console Text -->
+  <text x="10" y="55" fill="#00ff00" font-family="monospace" font-size="11">$ arm-none-eabi-gdb build/sr100_cm55_fw.elf</text>
+  
+  <text x="10" y="75" fill="#cccccc" font-family="monospace" font-size="10">GNU gdb (GNU Arm Embedded Toolchain 10.3-2021.10) 10.2.90.20210621-git</text>
+  <text x="10" y="90" fill="#cccccc" font-family="monospace" font-size="10">Reading symbols from build/sr100_cm55_fw.elf...</text>
+  
+  <text x="10" y="115" fill="#ffff00" font-family="monospace" font-size="10">(gdb) target extended-remote localhost:3333</text>
+  <text x="10" y="130" fill="#cccccc" font-family="monospace" font-size="10">Remote debugging using localhost:3333</text>
+  
+  <text x="10" y="155" fill="#ffff00" font-family="monospace" font-size="10">(gdb) monitor reset halt</text>
+  <text x="10" y="170" fill="#cccccc" font-family="monospace" font-size="10">target halted due to debug-request, current mode: Thread</text>
+  
+  <text x="10" y="195" fill="#ffff00" font-family="monospace" font-size="10">(gdb) load</text>
+  <text x="10" y="210" fill="#cccccc" font-family="monospace" font-size="10">Loading section .text, size 0x12340 lma 0x60000000</text>
+  <text x="10" y="225" fill="#cccccc" font-family="monospace" font-size="10">Loading section .data, size 0x1000 lma 0x60012340</text>
+  <text x="10" y="240" fill="#00ff00" font-family="monospace" font-size="10">Start address 0x60000000, load size 78656</text>
+  
+  <text x="10" y="265" fill="#ffff00" font-family="monospace" font-size="10">(gdb) break xspi_nor_initialize</text>
+  <text x="10" y="280" fill="#00ff00" font-family="monospace" font-size="10">Breakpoint 1 at 0x60001234: file xspi_flexspi_style.c, line 1520.</text>
+  
+  <text x="10" y="305" fill="#ffff00" font-family="monospace" font-size="10">(gdb) break xspi_nor_read</text>
+  <text x="10" y="320" fill="#00ff00" font-family="monospace" font-size="10">Breakpoint 2 at 0x60001678: file xspi_flexspi_style.c, line 1653.</text>
+  
+  <text x="10" y="345" fill="#ffff00" font-family="monospace" font-size="10">(gdb) continue</text>
+  <text x="10" y="360" fill="#00ff00" font-family="monospace" font-size="10">Continuing.</text>
+  
+  <text x="10" y="385" fill="#ff6b6b" font-family="monospace" font-size="10">Breakpoint 1, xspi_nor_initialize () at xspi_flexspi_style.c:1520</text>
+  <text x="10" y="400" fill="#cccccc" font-family="monospace" font-size="10">1520    if (g_xspi_data.initialized) {</text>
+  
+  <!-- Cursor -->
+  <text x="10" y="425" fill="#ffff00" font-family="monospace" font-size="10">(gdb) _</text>
+</svg>
