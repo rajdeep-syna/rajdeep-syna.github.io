@@ -1,0 +1,12 @@
+SRSDK Documentation
+===================
+
+Welcome to the Synaptics Astra SR SDK User Guide. This documentation provides comprehensive information for developers working with the Astra SR SDK.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   OpenOCD_Debug_Guide
+   OV5647.PDF
+   IR_Sensor_Guide

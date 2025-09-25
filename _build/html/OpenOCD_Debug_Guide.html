@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenOCD Debug Guide for xSPI Flash Driver &mdash; Synaptics Astra SR SDK User Guide SRSDK 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5482e925"></script>
+        <script src="_static/doctools.js?v=9bcbadda"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The OV5647 DataSheet" href="OV5647.PDF.html" />
+    <link rel="prev" title="SRSDK Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #007dc3" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+              <div class="version">
+                SRSDK 1.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenOCD Debug Guide for xSPI Flash Driver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#software-requirements">Software Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-requirements">Hardware Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-setup">Hardware Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#board-connections">1. Board Connections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#power-configuration">2. Power Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#swd-jtag-connection">3. SWD/JTAG Connection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#openocd-configuration">OpenOCD Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-openocd-configuration-file">1. Create OpenOCD Configuration File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#launch-openocd">2. Launch OpenOCD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging-session">Debugging Session</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#connect-gdb">1. Connect GDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set-breakpoints">2. Set Breakpoints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-debugging">3. Start Debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#common-debug-scenarios">Common Debug Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#flash-detection-issues">1. Flash Detection Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sfdp-parameter-issues">2. SFDP Parameter Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quad-mode-enable-problems">3. Quad Mode Enable Problems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xspi-controller-register-inspection">4. xSPI Controller Register Inspection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memory-operations-debug">5. Memory Operations Debug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues-and-solutions">Common Issues and Solutions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#connection-problems">1. Connection Problems</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flash-access-errors">2. Flash Access Errors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sfdp-reading-failures">3. SFDP Reading Failures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quad-mode-issues">4. Quad Mode Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#debug-commands-reference">Debug Commands Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openocd-monitor-commands">OpenOCD Monitor Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-debugging-techniques">Advanced Debugging Techniques</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#logic-analyzer-integration">1. Logic Analyzer Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-profiling">2. Performance Profiling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automated-test-scripts">3. Automated Test Scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="OV5647.PDF.html">The OV5647 DataSheet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IR_Sensor_Guide.html">RGB IR Sensor</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #007dc3" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Synaptics Astra SR SDK User Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenOCD Debug Guide for xSPI Flash Driver</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com//rajdeep-syna.github.io/blob/main/OpenOCD_Debug_Guide.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="openocd-debug-guide-for-xspi-flash-driver">
+<h1>OpenOCD Debug Guide for xSPI Flash Driver<a class="headerlink" href="#openocd-debug-guide-for-xspi-flash-driver" title="Link to this heading"></a></h1>
+<p>This guide provides step-by-step instructions for debugging the xSPI flash driver using OpenOCD and GDB.</p>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#prerequisites">Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#hardware-setup">Hardware Setup</a></p></li>
+<li><p><a class="reference internal" href="#openocd-configuration">OpenOCD Configuration</a></p></li>
+<li><p><a class="reference internal" href="#debugging-session">Debugging Session</a></p></li>
+<li><p><a class="reference internal" href="#common-debug-scenarios">Common Debug Scenarios</a></p></li>
+<li><p><a class="reference internal" href="#troubleshooting">Troubleshooting</a></p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<section id="software-requirements">
+<h3>Software Requirements<a class="headerlink" href="#software-requirements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>OpenOCD 0.12.0 or later</p></li>
+<li><p>ARM GDB (arm-none-eabi-gdb)</p></li>
+<li><p>J-Link drivers (if using J-Link debugger)</p></li>
+<li><p>SDK build environment</p></li>
+</ul>
+</section>
+<section id="hardware-requirements">
+<h3>Hardware Requirements<a class="headerlink" href="#hardware-requirements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Development board with xSPI controller</p></li>
+<li><p>J-Link or compatible JTAG/SWD debugger</p></li>
+<li><p>USB cables for power and debug connection</p></li>
+<li><p>xSPI flash memory device (Winbond, Macronix, GigaDevice, etc.)</p></li>
+</ul>
+<p><img alt="Hardware Setup" src="_images/hardware_setup.svg" /></p>
+</section>
+</section>
+<section id="hardware-setup">
+<h2>Hardware Setup<a class="headerlink" href="#hardware-setup" title="Link to this heading"></a></h2>
+<section id="board-connections">
+<h3>1. Board Connections<a class="headerlink" href="#board-connections" title="Link to this heading"></a></h3>
+<p>Connect your hardware as shown in the diagram:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[PC] ←USB→ [J-Link] ←SWD→ [Dev Board] ←xSPI→ [Flash Memory]
+</pre></div>
+</div>
+</section>
+<section id="power-configuration">
+<h3>2. Power Configuration<a class="headerlink" href="#power-configuration" title="Link to this heading"></a></h3>
+<p>Ensure proper power supply to the development board:</p>
+<ul class="simple">
+<li><p>Connect USB power or external power supply</p></li>
+<li><p>Verify 3.3V rail is stable</p></li>
+<li><p>Check that flash memory is properly powered</p></li>
+</ul>
+<p><img alt="Power Connections" src="_images/power_connections.svg" /></p>
+</section>
+<section id="swd-jtag-connection">
+<h3>3. SWD/JTAG Connection<a class="headerlink" href="#swd-jtag-connection" title="Link to this heading"></a></h3>
+<p>Connect the debugger to the development board SWD interface:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>J-Link Pin</p></th>
+<th class="head"><p>Board Pin</p></th>
+<th class="head"><p>Signal</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>VCC</p></td>
+<td><p>3.3V</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>SWDIO</p></td>
+<td><p>SWDIO</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>SWCLK</p></td>
+<td><p>SWCLK</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>nRESET</p></td>
+<td><p>RESET</p></td>
+</tr>
+<tr class="row-even"><td><p>4,6,8,10,12,14,16,18,20</p></td>
+<td><p>GND</p></td>
+<td><p>Ground</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="openocd-configuration">
+<h2>OpenOCD Configuration<a class="headerlink" href="#openocd-configuration" title="Link to this heading"></a></h2>
+<section id="create-openocd-configuration-file">
+<h3>1. Create OpenOCD Configuration File<a class="headerlink" href="#create-openocd-configuration-file" title="Link to this heading"></a></h3>
+<p>Create <code class="docutils literal notranslate"><span class="pre">xspi_debug.cfg</span></code> in your project directory:</p>
+<div class="highlight-tcl notranslate"><div class="highlight"><pre><span></span><span class="c"># xSPI Debug Configuration</span>
+<span class="nb">source</span><span class="w"> </span><span class="k">[</span><span class="nv">find</span><span class="w"> </span>interface<span class="o">/</span>jlink.cfg<span class="k">]</span>
+
+<span class="c"># Set adapter speed</span>
+<span class="nv">adapter</span><span class="w"> </span>speed<span class="w"> </span><span class="mi">4000</span>
+
+<span class="c"># Target configuration</span>
+<span class="nb">source</span><span class="w"> </span><span class="k">[</span><span class="nv">find</span><span class="w"> </span>target<span class="o">/</span>cortex_m.cfg<span class="k">]</span>
+
+<span class="c"># Target specific settings</span>
+<span class="k">set</span><span class="w"> </span>CHIPNAME<span class="w"> </span>target
+<span class="k">set</span><span class="w"> </span>CPUTAPID<span class="w"> </span><span class="mh">0x6ba02477</span>
+
+<span class="c"># CM55 Core configuration</span>
+<span class="nv">target</span><span class="w"> </span>create<span class="w"> </span><span class="nv">$_CHIPNAME.cm55</span><span class="w"> </span>cortex_m<span class="w"> </span><span class="o">-</span>endian<span class="w"> </span>little<span class="w"> </span><span class="o">-</span>chain-position<span class="w"> </span><span class="nv">$_CHIPNAME.cpu</span>
+
+<span class="c"># Flash configuration for xSPI</span>
+<span class="nv">flash</span><span class="w"> </span>bank<span class="w"> </span>xspi_flash<span class="w"> </span>external<span class="w"> </span><span class="mh">0x60000000</span><span class="w"> </span><span class="mh">0x1000000</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="nv">$_CHIPNAME.cm55</span>
+
+<span class="c"># Reset configuration</span>
+<span class="nv">reset_config</span><span class="w"> </span>srst_only<span class="w"> </span>srst_nogate
+
+<span class="c"># Initialize</span>
+<span class="nv">init</span>
+
+<span class="c"># Enable semihosting</span>
+<span class="nv">arm</span><span class="w"> </span>semihosting<span class="w"> </span>enable
+
+<span class="c"># Halt after reset</span>
+<span class="nv">reset</span><span class="w"> </span>halt
+</pre></div>
+</div>
+</section>
+<section id="launch-openocd">
+<h3>2. Launch OpenOCD<a class="headerlink" href="#launch-openocd" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>openocd<span class="w"> </span>-f<span class="w"> </span>xspi_debug.cfg
+</pre></div>
+</div>
+<p>Expected output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Open</span> <span class="n">On</span><span class="o">-</span><span class="n">Chip</span> <span class="n">Debugger</span> <span class="mf">0.12.0</span>
+<span class="n">Licensed</span> <span class="n">under</span> <span class="n">GNU</span> <span class="n">GPL</span> <span class="n">v2</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">J</span><span class="o">-</span><span class="n">Link</span> <span class="n">initialization</span> <span class="n">started</span> <span class="o">/</span> <span class="n">target</span> <span class="n">CPU</span> <span class="n">reset</span> <span class="n">initiated</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">J</span><span class="o">-</span><span class="n">Link</span> <span class="n">V11</span> <span class="n">compiled</span> <span class="n">Feb</span>  <span class="mi">2</span> <span class="mi">2021</span> <span class="mi">16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mi">23</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">Hardware</span> <span class="n">version</span><span class="p">:</span> <span class="mf">11.00</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">VTarget</span> <span class="o">=</span> <span class="mf">3.300</span><span class="n">V</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">clock</span> <span class="n">speed</span> <span class="mi">4000</span> <span class="n">kHz</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">SWD</span> <span class="n">DPIDR</span> <span class="mh">0x6ba02477</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">cm55</span><span class="p">:</span> <span class="n">hardware</span> <span class="n">has</span> <span class="mi">8</span> <span class="n">breakpoints</span><span class="p">,</span> <span class="mi">4</span> <span class="n">watchpoints</span>
+<span class="n">Info</span> <span class="p">:</span> <span class="n">starting</span> <span class="n">gdb</span> <span class="n">server</span> <span class="k">for</span> <span class="n">target</span><span class="o">.</span><span class="n">cm55</span> <span class="n">on</span> <span class="mi">3333</span>
+</pre></div>
+</div>
+<p><img alt="OpenOCD Console" src="_images/openocd_console.svg" /></p>
+</section>
+</section>
+<section id="debugging-session">
+<h2>Debugging Session<a class="headerlink" href="#debugging-session" title="Link to this heading"></a></h2>
+<section id="connect-gdb">
+<h3>1. Connect GDB<a class="headerlink" href="#connect-gdb" title="Link to this heading"></a></h3>
+<p>In a separate terminal, launch GDB:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>arm-none-eabi-gdb<span class="w"> </span>build/sr100_cm55_fw.elf
+</pre></div>
+</div>
+<p>Connect to OpenOCD:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span>(gdb) target extended-remote localhost:3333
+(gdb) monitor reset halt
+(gdb) load
+(gdb) monitor reset halt
+</pre></div>
+</div>
+</section>
+<section id="set-breakpoints">
+<h3>2. Set Breakpoints<a class="headerlink" href="#set-breakpoints" title="Link to this heading"></a></h3>
+<p>Set breakpoints in xSPI driver functions:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># Break at driver initialization
+(gdb) break xspi_nor_initialize
+
+# Break at read/write operations
+(gdb) break xspi_nor_read
+(gdb) break xspi_nor_write
+
+# Break at SFDP detection
+(gdb) break xspi_configure_from_sfdp
+
+# Break at quad mode enable
+(gdb) break xspi_enable_quad_mode
+</pre></div>
+</div>
+</section>
+<section id="start-debugging">
+<h3>3. Start Debugging<a class="headerlink" href="#start-debugging" title="Link to this heading"></a></h3>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span>(gdb) continue
+</pre></div>
+</div>
+<p><img alt="GDB Session" src="_images/gdb_session.svg" /></p>
+</section>
+</section>
+<section id="common-debug-scenarios">
+<h2>Common Debug Scenarios<a class="headerlink" href="#common-debug-scenarios" title="Link to this heading"></a></h2>
+<section id="flash-detection-issues">
+<h3>1. Flash Detection Issues<a class="headerlink" href="#flash-detection-issues" title="Link to this heading"></a></h3>
+<p>If flash is not detected properly:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># Check JEDEC ID reading
+(gdb) break xspi_read_jedec_id
+(gdb) continue
+(gdb) print/x jedec_id[0]
+(gdb) print/x jedec_id[1] 
+(gdb) print/x jedec_id[2]
+</pre></div>
+</div>
+</section>
+<section id="sfdp-parameter-issues">
+<h3>2. SFDP Parameter Issues<a class="headerlink" href="#sfdp-parameter-issues" title="Link to this heading"></a></h3>
+<p>Debug SFDP parameter reading:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># Break at SFDP header reading
+(gdb) break jesd216_sfdp_read
+(gdb) continue
+
+# Examine SFDP data
+(gdb) x/16xw sfdp_header
+(gdb) x/64xw bfp_table
+</pre></div>
+</div>
+</section>
+<section id="quad-mode-enable-problems">
+<h3>3. Quad Mode Enable Problems<a class="headerlink" href="#quad-mode-enable-problems" title="Link to this heading"></a></h3>
+<p>Debug quad mode configuration:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># Check QER detection
+(gdb) break xspi_read_qer_from_sfdp
+(gdb) continue
+(gdb) print qer_type
+
+# Check status register operations
+(gdb) break xspi_read_status
+(gdb) continue
+(gdb) print/x status_value
+</pre></div>
+</div>
+</section>
+<section id="xspi-controller-register-inspection">
+<h3>4. xSPI Controller Register Inspection<a class="headerlink" href="#xspi-controller-register-inspection" title="Link to this heading"></a></h3>
+<p>Examine xSPI controller registers during operation:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># Check controller configuration
+(gdb) x/x 0x40000000  # XSPI_CTRL_BASE_ADDRESS
+(gdb) x/x 0x40000004  # Control config register
+(gdb) x/x 0x40000008  # Status register
+
+# Check LUT entries
+(gdb) x/16xw 0x40000200  # LUT table base
+</pre></div>
+</div>
+<p><img alt="Register Inspection" src="_images/register_inspection.svg" /></p>
+</section>
+<section id="memory-operations-debug">
+<h3>5. Memory Operations Debug<a class="headerlink" href="#memory-operations-debug" title="Link to this heading"></a></h3>
+<p>Debug read/write operations:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># Set watchpoint on data buffer
+(gdb) watch *((char*)data_buffer)
+
+# Check XIP memory space
+(gdb) x/64xw 0x60000000  # XIP base address
+
+# Monitor flash operations
+(gdb) break xspi_nor_write_page_stig
+(gdb) continue
+(gdb) print/x address
+(gdb) print length
+(gdb) x/16xb data
+</pre></div>
+</div>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="common-issues-and-solutions">
+<h3>Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Link to this heading"></a></h3>
+<section id="connection-problems">
+<h4>1. Connection Problems<a class="headerlink" href="#connection-problems" title="Link to this heading"></a></h4>
+<p><strong>Issue</strong>: OpenOCD cannot connect to target</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">SWD</span> <span class="n">DPIDR</span> <span class="mh">0x00000000</span>
+<span class="n">Error</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">initialize</span> <span class="n">the</span> <span class="n">debug</span> <span class="n">port</span>
+</pre></div>
+</div>
+<p><strong>Solution</strong>:</p>
+<ul class="simple">
+<li><p>Check SWD connections</p></li>
+<li><p>Verify target power</p></li>
+<li><p>Reduce adapter speed: <code class="docutils literal notranslate"><span class="pre">adapter</span> <span class="pre">speed</span> <span class="pre">1000</span></code></p></li>
+<li><p>Try different reset configuration</p></li>
+</ul>
+</section>
+<section id="flash-access-errors">
+<h4>2. Flash Access Errors<a class="headerlink" href="#flash-access-errors" title="Link to this heading"></a></h4>
+<p><strong>Issue</strong>: Cannot read/write flash memory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">Failed</span> <span class="n">to</span> <span class="n">read</span> <span class="n">flash</span> <span class="n">status</span>
+<span class="n">Error</span><span class="p">:</span> <span class="n">Flash</span> <span class="n">operation</span> <span class="n">timeout</span>
+</pre></div>
+</div>
+<p><strong>Solution</strong>:</p>
+<ul class="simple">
+<li><p>Verify flash power supply</p></li>
+<li><p>Check xSPI controller initialization</p></li>
+<li><p>Ensure correct flash device configuration</p></li>
+<li><p>Verify LUT table programming</p></li>
+</ul>
+</section>
+<section id="sfdp-reading-failures">
+<h4>3. SFDP Reading Failures<a class="headerlink" href="#sfdp-reading-failures" title="Link to this heading"></a></h4>
+<p><strong>Issue</strong>: SFDP parameters cannot be read</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SFDP</span> <span class="n">header</span> <span class="n">read</span> <span class="n">failed</span>
+<span class="n">Invalid</span> <span class="n">SFDP</span> <span class="n">signature</span>
+</pre></div>
+</div>
+<p><strong>Solution</strong>:</p>
+<ul class="simple">
+<li><p>Check flash device compatibility</p></li>
+<li><p>Verify SFDP read command (0x5A)</p></li>
+<li><p>Ensure proper dummy cycles</p></li>
+<li><p>Try different read modes (1-1-1 first)</p></li>
+</ul>
+</section>
+<section id="quad-mode-issues">
+<h4>4. Quad Mode Issues<a class="headerlink" href="#quad-mode-issues" title="Link to this heading"></a></h4>
+<p><strong>Issue</strong>: Quad mode enable fails</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QE</span> <span class="n">bit</span> <span class="ow">not</span> <span class="nb">set</span> <span class="n">after</span> <span class="n">write</span>
+<span class="n">Quad</span> <span class="n">read</span> <span class="n">operations</span> <span class="n">fail</span>
+</pre></div>
+</div>
+<p><strong>Solution</strong>:</p>
+<ul class="simple">
+<li><p>Verify QER type detection</p></li>
+<li><p>Check manufacturer-specific QE procedures</p></li>
+<li><p>Ensure proper write enable sequence</p></li>
+<li><p>Verify status register write operations</p></li>
+</ul>
+</section>
+</section>
+<section id="debug-commands-reference">
+<h3>Debug Commands Reference<a class="headerlink" href="#debug-commands-reference" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>GDB Command</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">registers</span></code></p></td>
+<td><p>Show CPU registers</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">backtrace</span></code></p></td>
+<td><p>Show call stack</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">print</span> <span class="pre">variable</span></code></p></td>
+<td><p>Print variable value</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">x/NUaddr</span></code></p></td>
+<td><p>Examine memory</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">watch</span> <span class="pre">expression</span></code></p></td>
+<td><p>Set watchpoint</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span> <span class="pre">reset</span></code></p></td>
+<td><p>Reset target via OpenOCD</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span> <span class="pre">halt</span></code></p></td>
+<td><p>Halt target execution</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="openocd-monitor-commands">
+<h3>OpenOCD Monitor Commands<a class="headerlink" href="#openocd-monitor-commands" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span> <span class="pre">reset</span> <span class="pre">halt</span></code></p></td>
+<td><p>Reset and halt target</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span> <span class="pre">reg</span></code></p></td>
+<td><p>Show registers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span> <span class="pre">flash</span> <span class="pre">info</span> <span class="pre">0</span></code></p></td>
+<td><p>Show flash bank info</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span> <span class="pre">mdw</span> <span class="pre">address</span></code></p></td>
+<td><p>Read word from memory</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span> <span class="pre">mww</span> <span class="pre">address</span> <span class="pre">value</span></code></p></td>
+<td><p>Write word to memory</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="advanced-debugging-techniques">
+<h2>Advanced Debugging Techniques<a class="headerlink" href="#advanced-debugging-techniques" title="Link to this heading"></a></h2>
+<section id="logic-analyzer-integration">
+<h3>1. Logic Analyzer Integration<a class="headerlink" href="#logic-analyzer-integration" title="Link to this heading"></a></h3>
+<p>For complex timing issues, use a logic analyzer to capture SPI signals:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Channels</span> <span class="n">to</span> <span class="n">monitor</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">CLK</span><span class="p">:</span> <span class="n">xSPI</span> <span class="n">clock</span>
+<span class="o">-</span> <span class="n">CS</span><span class="c1">#: Chip select</span>
+<span class="o">-</span> <span class="n">IO0</span><span class="o">-</span><span class="n">IO3</span><span class="p">:</span> <span class="n">Data</span> <span class="n">lines</span> <span class="p">(</span><span class="n">quad</span> <span class="n">mode</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">IO4</span><span class="o">-</span><span class="n">IO7</span><span class="p">:</span> <span class="n">Additional</span> <span class="n">data</span> <span class="n">lines</span> <span class="p">(</span><span class="n">octal</span> <span class="n">mode</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="Logic Analyzer Setup" src="_images/logic_analyzer.svg" /></p>
+</section>
+<section id="performance-profiling">
+<h3>2. Performance Profiling<a class="headerlink" href="#performance-profiling" title="Link to this heading"></a></h3>
+<p>Profile flash operations:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># Time flash operations
+(gdb) set $start = $pc
+(gdb) continue
+(gdb) set $end = $pc
+(gdb) print $end - $start
+</pre></div>
+</div>
+</section>
+<section id="automated-test-scripts">
+<h3>3. Automated Test Scripts<a class="headerlink" href="#automated-test-scripts" title="Link to this heading"></a></h3>
+<p>Create GDB scripts for automated testing:</p>
+<div class="highlight-gdb notranslate"><div class="highlight"><pre><span></span># test_flash.gdb
+define test_flash_read
+    break xspi_nor_read
+    continue
+    print &quot;Read operation started&quot;
+    continue
+    print &quot;Read operation completed&quot;
+end
+
+define test_flash_write  
+    break xspi_nor_write
+    continue
+    print &quot;Write operation started&quot;
+    continue
+    print &quot;Write operation completed&quot;
+end
+</pre></div>
+</div>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>This guide provides comprehensive debugging support for the Sabre xSPI flash driver. Use the appropriate debugging techniques based on your specific issue:</p>
+<ul class="simple">
+<li><p><strong>Connection issues</strong>: Start with basic OpenOCD connection</p></li>
+<li><p><strong>Flash detection</strong>: Debug JEDEC ID and SFDP reading</p></li>
+<li><p><strong>Mode configuration</strong>: Focus on quad/octal mode enable sequences</p></li>
+<li><p><strong>Data operations</strong>: Monitor read/write operations and memory access</p></li>
+<li><p><strong>Performance issues</strong>: Use profiling and logic analyzer capture</p></li>
+</ul>
+<p>For additional support, refer to the driver source code comments and the xSPI controller documentation.</p>
+<hr class="docutils" />
+<p><strong>Note</strong>: Replace placeholder images in the <code class="docutils literal notranslate"><span class="pre">_static/assets/</span></code> directory with actual screenshots and diagrams from your debugging setup.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="SRSDK Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="OV5647.PDF.html" class="btn btn-neutral float-right" title="The OV5647 DataSheet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - 2025, Synaptics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

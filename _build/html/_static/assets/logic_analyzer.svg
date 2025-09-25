@@ -1,0 +1,83 @@
+<svg width="700" height="350" xmlns="http://www.w3.org/2000/svg">
+  <rect width="700" height="350" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+  
+  <!-- Title -->
+  <text x="350" y="25" text-anchor="middle" fill="#495057" font-family="Arial" font-size="16" font-weight="bold">Logic Analyzer - xSPI Signal Capture</text>
+  
+  <!-- Time axis -->
+  <line x1="50" y1="50" x2="650" y2="50" stroke="#6c757d" stroke-width="1"/>
+  <text x="350" y="45" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="10">Time (μs)</text>
+  
+  <!-- Time markers -->
+  <line x1="100" y1="45" x2="100" y2="55" stroke="#6c757d" stroke-width="1"/>
+  <text x="100" y="40" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="8">0</text>
+  <line x1="200" y1="45" x2="200" y2="55" stroke="#6c757d" stroke-width="1"/>
+  <text x="200" y="40" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="8">1</text>
+  <line x1="300" y1="45" x2="300" y2="55" stroke="#6c757d" stroke-width="1"/>
+  <text x="300" y="40" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="8">2</text>
+  <line x1="400" y1="45" x2="400" y2="55" stroke="#6c757d" stroke-width="1"/>
+  <text x="400" y="40" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="8">3</text>
+  <line x1="500" y1="45" x2="500" y2="55" stroke="#6c757d" stroke-width="1"/>
+  <text x="500" y="40" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="8">4</text>
+  
+  <!-- CLK Signal -->
+  <text x="20" y="85" fill="#495057" font-family="Arial" font-size="10">CLK</text>
+  <line x1="50" y1="80" x2="650" y2="80" stroke="#e9ecef" stroke-width="1"/>
+  <!-- Clock pulses -->
+  <g stroke="#007bff" stroke-width="2" fill="none">
+    <path d="M100,90 L100,70 L110,70 L110,90 L120,90 L120,70 L130,70 L130,90 L140,90 L140,70 L150,70 L150,90"/>
+    <path d="M200,90 L200,70 L210,70 L210,90 L220,90 L220,70 L230,70 L230,90 L240,90 L240,70 L250,70 L250,90"/>
+  </g>
+  
+  <!-- CS# Signal -->
+  <text x="20" y="115" fill="#495057" font-family="Arial" font-size="10">CS#</text>
+  <line x1="50" y1="110" x2="650" y2="110" stroke="#e9ecef" stroke-width="1"/>
+  <g stroke="#dc3545" stroke-width="2" fill="none">
+    <path d="M50,100 L95,100 L95,120 L155,120 L155,100 L195,100 L195,120 L255,120 L255,100 L650,100"/>
+  </g>
+  
+  <!-- IO0 (MOSI/DQ0) -->
+  <text x="20" y="145" fill="#495057" font-family="Arial" font-size="10">IO0</text>
+  <line x1="50" y1="140" x2="650" y2="140" stroke="#e9ecef" stroke-width="1"/>
+  <g stroke="#28a745" stroke-width="2" fill="none">
+    <path d="M100,150 L105,130 L115,130 L120,150 L125,130 L135,130 L140,150 L145,130 L155,130"/>
+    <path d="M200,150 L205,130 L215,130 L220,150 L225,130 L235,130 L240,150 L245,130 L255,130"/>
+  </g>
+  
+  <!-- IO1 (MISO/DQ1) -->
+  <text x="20" y="175" fill="#495057" font-family="Arial" font-size="10">IO1</text>
+  <line x1="50" y1="170" x2="650" y2="170" stroke="#e9ecef" stroke-width="1"/>
+  <g stroke="#ffc107" stroke-width="2" fill="none">
+    <path d="M100,160 L110,180 L115,160 L125,180 L130,160 L140,180 L145,160 L155,160"/>
+    <path d="M200,180 L210,160 L215,180 L225,160 L230,180 L240,160 L245,180 L255,180"/>
+  </g>
+  
+  <!-- IO2 (DQ2) -->
+  <text x="20" y="205" fill="#495057" font-family="Arial" font-size="10">IO2</text>
+  <line x1="50" y1="200" x2="650" y2="200" stroke="#e9ecef" stroke-width="1"/>
+  <g stroke="#6f42c1" stroke-width="2" fill="none">
+    <path d="M200,210 L205,190 L215,190 L220,210 L225,190 L235,190 L240,210 L245,190 L255,190"/>
+  </g>
+  
+  <!-- IO3 (DQ3) -->
+  <text x="20" y="235" fill="#495057" font-family="Arial" font-size="10">IO3</text>
+  <line x1="50" y1="230" x2="650" y2="230" stroke="#e9ecef" stroke-width="1"/>
+  <g stroke="#17a2b8" stroke-width="2" fill="none">
+    <path d="M200,220 L210,240 L215,220 L225,240 L230,220 L240,240 L245,220 L255,220"/>
+  </g>
+  
+  <!-- Command annotations -->
+  <rect x="95" y="250" width="60" height="20" fill="#fff3cd" stroke="#ffeaa7" rx="3"/>
+  <text x="125" y="263" text-anchor="middle" fill="#856404" font-family="Arial" font-size="9">CMD (0xEB)</text>
+  
+  <rect x="160" y="250" width="40" height="20" fill="#d1ecf1" stroke="#bee5eb" rx="3"/>
+  <text x="180" y="263" text-anchor="middle" fill="#0c5460" font-family="Arial" font-size="9">ADDR</text>
+  
+  <rect x="205" y="250" width="50" height="20" fill="#d4edda" stroke="#c3e6cb" rx="3"/>
+  <text x="230" y="263" text-anchor="middle" fill="#155724" font-family="Arial" font-size="9">DATA</text>
+  
+  <!-- Protocol info -->
+  <text x="350" y="290" text-anchor="middle" fill="#495057" font-family="Arial" font-size="12" font-weight="bold">1-4-4 Quad Read Operation</text>
+  <text x="350" y="310" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="10">Command: 1-line, Address: 4-line, Data: 4-line</text>
+  <text x="350" y="325" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="10">Frequency: 50 MHz, Dummy cycles: 6</text>
+</svg>

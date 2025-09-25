@@ -1,0 +1,36 @@
+The OV5647 DataSheet
+====================
+
+This document provides detailed technical information and instructions.
+
+.. raw:: html
+
+   <div style="text-align: center; margin: 30px 0;">
+       <a href="_static/OV5647.PDF" 
+          target="_blank" 
+          style="display: inline-block; background-color: #0066cc; color: white; padding: 15px 25px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+          📄 Open OV5647.PDF (PDF)
+       </a>
+   </div>
+
+   <div style="text-align: center; margin: 20px 0;">
+       <a href="_static/OV5647.PDF" 
+          download 
+          style="display: inline-block; background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+          💾 Download PDF
+       </a>
+   </div>
+
+About This Document
+-------------------
+
+This document contains comprehensive information and technical specifications. Click the link above to view the complete PDF content.
+
+The PDF includes:
+
+* Detailed procedures and instructions
+* Technical specifications  
+* Code examples and references
+* Troubleshooting information
+
+For the best viewing experience, click "Open PDF" to view in a new tab, or use "Download PDF" to save locally.
